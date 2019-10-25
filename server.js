@@ -91,6 +91,24 @@ app.post('/blog-posts', jsonParser, (req, res, next) => {
 
 });
 
+app.delete('/blog-posts/:id', (req, res, next) => {
+    for (let i = 0; i < blogPosts.length; i++) {
+        if (req.params.id == blogPosts[i].id) {
+            blogPosts.splice(i, 1);
+            res.statusMessage = "Successfully deleted the post"
+            return res.status(200).json({
+                code: 200,
+                message: "Succesfully deleted the post"
+            })
+        }
+    }
+    res.statusMessage = "ID was not found";
+    return res.status(404).json({
+        code: 404,
+        message: "ID was not found"
+    })
+});
+
 app.listen('8080', () => {
     console.log("App running on localhost:8080");
 });
