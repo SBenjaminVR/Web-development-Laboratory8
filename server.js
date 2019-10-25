@@ -109,6 +109,47 @@ app.delete('/blog-posts/:id', (req, res, next) => {
     })
 });
 
+app.put('/blog-posts/:id', jsonParser, (req, res, next) => {
+    console.log("I tired");
+    if (req.body.id == undefined) {
+        res.statusMessage = "ID param is missing in the body";
+        res.status(406).json({
+            code: 406,
+            message: "ID param is missing in the body"
+        })
+    }
+    if (req.body.id != req.params.id) {
+        res.statusMessage = "The IDs do not match";
+        res.status(409).json({
+            code: 409,
+            message: "The IDs do not match"
+        });
+    }
+    for (let i = 0; i < blogPosts.length; i++) {
+        if (blogPosts[i].id == req.body.id) {
+            if (req.body.title != undefined) {
+                blogPosts[i].title = req.body.title;
+            }
+            if (req.body.content != undefined) {
+                blogPosts[i].content = req.body.content;
+            }
+            if (req.body.author != undefined) {
+                blogPosts[i].author = req.body.author;
+            }
+            if (req.body.publishDate != undefined) {
+                blogPosts[i].publishDate = new Date(req.body.publishDate);
+            }
+            res.statusMessage = "Successfully updated the post";
+            return res.status(202).json(blogPosts[i]);
+        }
+    }
+    res.statusMessage = "ID was not found";
+    return res.status(404).json({
+        code: 404,
+        message: "ID was not found"
+    })
+});
+
 app.listen('8080', () => {
     console.log("App running on localhost:8080");
 });
