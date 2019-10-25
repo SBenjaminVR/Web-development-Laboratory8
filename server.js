@@ -71,6 +71,26 @@ app.get('/blog-post', (req, res, next) => {
     return res.status(200).json(authorPosts);
 });
 
+app.post('/blog-posts', jsonParser, (req, res, next) => {
+    if (req.body.title == undefined || req.body.content == undefined || req.body.author == undefined || req.body.publishDate == undefined) {
+        res.statusMessage = "Missing field in the post";
+        return res.status(406).json({
+            code: 406,
+            message: "Missing field in the post"
+        });
+    }
+    let newPost = {
+        id: uuid.v4(),
+        title: req.body.title,
+        content: req.body.content,
+        author: req.body.author,
+        publishDate: new Date(req.body.publishDate)
+    }
+    blogPosts.push(newPost);
+    return res.status(201).json(newPost);
+
+});
+
 app.listen('8080', () => {
     console.log("App running on localhost:8080");
 });
