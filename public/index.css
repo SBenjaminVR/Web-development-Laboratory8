@@ -1,8 +1,8 @@
-#errorMessage {
+#errorMessage, #errorMessageUpdate {
     color: red;
     margin: 8px;
 }
-#successfulMessage {
+#successfulMessage, #successfulDeleteMessage {
     color: green;
     margin: 8px;
 }
@@ -10,6 +10,10 @@
 #blogPosts {
     list-style: none;
     padding: 3px;
+    margin: 8px;
+}
+
+#webTitle {
     margin: 8px;
 }
 

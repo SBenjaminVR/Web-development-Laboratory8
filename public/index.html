@@ -10,7 +10,8 @@
 </head>
 
 <body>
-    <h1>Awesome blog</h1>
+    <h1 id="webTitle">Awesome blog</h1>
+    <div id="successfulDeleteMessage"></div>
     <form>
         <fieldset>
             <legend>
@@ -39,6 +40,15 @@
     <ul id="blogPosts">
 
     </ul>
+    <form>
+        <fieldset id="deleteForm">
+        </fieldset>
+    </form>
+    <form>
+        <div id="errorMessageUpdate"></div>
+        <fieldset id="updateForm">
+        </fieldset>
+    </form>
     <script src="https://code.jquery.com/jquery-3.4.1.js"
         integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <script src="./index.js"></script>
