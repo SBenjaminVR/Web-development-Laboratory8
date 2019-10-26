@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>The awesome blog</title>
@@ -7,42 +8,39 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
+
 <body>
     <h1>Awesome blog</h1>
-    <fieldset>
-        <legend>
-            New Post
-        </legend>
-        <p>
-            <label for="postAuthor">Author name</label>
-        </p>
-        <input class="formElement" id="postAuthor" type="text" />
-        <span class="errorMessage" id="postAuthorErrorMessage">
-    
-        </span>
-        <p>
-            <label for="postTitle">Title</label>
-        </p>
-        <input class="formElement" id="postTitle" type="text" />
-        <span class="errorMessage" id="postTitleErrorMessage">
-
-        </span>
-        <p>
-            <label for="postContent">Content</label>
-        </p>
-        <textarea class="formElement" id="postContent" type="text"></textarea>
-        <span class="errorMessage" id="postContentErrorMessage">
-    
-        </span>
-        <input class="buttonHover" id="postButton" type="submit" value="Submit" />
-    </fieldset>
+    <form>
+        <fieldset>
+            <legend>
+                Create a new post
+            </legend>
+            <div class="form-group">
+                <label for="postAuthor">Author name</label>
+                <input class="formElement form-control" id="postAuthor" type="text" />
+                <span class="errorMessage" id="postAuthorErrorMessage">
+            </div>
+            <div class="form-group">
+                <label for="postTitle">Title</label>
+            <input class="formElement form-control" id="postTitle" type="text" />
+            <span class="errorMessage" id="postTitleErrorMessage">
+            </div>
+            <div class="form-group">
+                <label for="postContent">Content</label>
+            <textarea class="formElement form-control" id="postContent" rows="3" type="text"></textarea>
+            </div>
+            <button type="cancel" class="btn btn-danger" id="cancelButton">Cancel</button>
+            <input class="btn btn-primary" id="postButton" type="submit" value="Submit" />
+        </fieldset>
     </form>
     <div id="errorMessage"></div>
     <div id="successfulMessage"></div>
     <ul id="blogPosts">
 
     </ul>
-    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <script src="./index.js"></script>
 </body>
 

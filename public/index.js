@@ -7,6 +7,12 @@ let newPost = {
     publishDate: ""
 }
 
+function cleanNewPost() {
+    $('#postAuthor').val('');
+    $('#postTitle').val('');
+    $('#postContent').val('');
+}
+
 function fetchBlogPosts() {
     $.ajax({
         url: "http://localhost:8080/blog-posts",
@@ -15,7 +21,7 @@ function fetchBlogPosts() {
         success: function(responseJSON) {
             console.log(responseJSON);
             for (let i = 0; i < responseJSON.length; i++) {
-                $('#blogPosts').append(`<li><h2>${responseJSON[i].title}</h2><h4>Posted on: ${responseJSON[i].publishDate}</h4><p>${responseJSON[i].content}</p><p>This post was created by: ${responseJSON[i].author}</p></li>`)
+                $('#blogPosts').append(`<li class="border border-primary"><h2>${responseJSON[i].title}</h2><h4>Posted on: ${responseJSON[i].publishDate}</h4><p>${responseJSON[i].content}</p><p>This post was created by: ${responseJSON[i].author}</p></li>`)
             }
         },
         error: function (err) {
@@ -37,9 +43,7 @@ function post() {
             $('#errorMessage').html(``);
             $('#blogPosts').html(``);
             $('#successfulMessage').html(`<b>The post has been successfully added to the end of the list</b>`);
-            $('#postAuthor').val('');
-            $('#postTitle').val('');
-            $('#postContent').val('');
+            cleanNewPost();
             fetchBlogPosts();
         },
         error: function (err) {
@@ -78,6 +82,10 @@ function watchForms() {
         newPost.publishDate = new Date();
         post()
 
+    })
+    $('#cancelButton').on('click', (event) => {
+        event.preventDefault();
+        cleanNewPost();
     })
 }
 

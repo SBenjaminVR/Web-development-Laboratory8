@@ -1,6 +1,25 @@
 #errorMessage {
     color: red;
+    margin: 8px;
 }
 #successfulMessage {
     color: green;
+    margin: 8px;
+}
+
+#blogPosts {
+    list-style: none;
+    padding: 3px;
+    margin: 8px;
+}
+
+#blogPosts > li {
+    list-style: none;
+    margin: 8px;
+}
+
+form {
+    padding: 15px;
+    margin: 15px;
+    border: 2px solid skyblue;
 }
