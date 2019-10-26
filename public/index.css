@@ -1,4 +1,4 @@
-#errorMessage, #errorMessageUpdate {
+#errorMessage, #errorMessageUpdate, #errorMessageDelete {
     color: red;
     margin: 8px;
 }
@@ -26,4 +26,16 @@ form {
     padding: 15px;
     margin: 15px;
     border: 2px solid skyblue;
+}
+
+.blogCard {
+    padding: 8px;
+}
+
+.blogTitles {
+    color: orange;
+}
+
+.authors {
+    color: olivedrab;
 }

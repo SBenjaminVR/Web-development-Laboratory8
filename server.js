@@ -117,7 +117,6 @@ app.delete('/blog-posts/:id', (req, res, next) => {
 });
 
 app.put('/blog-posts/:id', jsonParser, (req, res, next) => {
-    console.log("I tired");
     if (req.body.id == undefined) {
         res.statusMessage = "ID param is missing in the body";
         res.status(406).json({

@@ -3,14 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <title>The awesome blog</title>
+    <title>The CRUD blog</title>
     <link rel="stylesheet" href="./index.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
-    <h1 id="webTitle">Awesome blog</h1>
+    <h1 id="webTitle">CRUD blog</h1>
     <div id="successfulDeleteMessage"></div>
     <form>
         <fieldset>
@@ -18,7 +18,7 @@
                 Create a new post
             </legend>
             <div class="form-group">
-                <label for="postAuthor">Author name</label>
+                <label for="postAuthor">Name of the author</label>
                 <input class="formElement form-control" id="postAuthor" type="text" />
                 <span class="errorMessage" id="postAuthorErrorMessage">
             </div>
@@ -41,6 +41,7 @@
 
     </ul>
     <form>
+        <div id="errorMessageDelete"></div>
         <fieldset id="deleteForm">
         </fieldset>
     </form>

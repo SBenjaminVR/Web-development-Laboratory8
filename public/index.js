@@ -21,6 +21,7 @@ function cleanPage() {
     $('#errorMessageUpdate').html('');
     $('#deleteForm').html('');
     $('#updateForm').html('');
+    $('#errorMessageDelete').html('');
 }
 
 function createDeleteForm() {
@@ -34,7 +35,7 @@ function createUpdateForm() {
     $('#updateForm').append(`<legend>Update a post (You can leave up to 2 fields empty)</legend>`);
     $('#updateForm').append(`<select class="custom-select" id="selectPostToUpdate"></select>`);
     $('#updateForm').append(`<div class="form-group">
-                <label for="updateAuthor">New author's name</label>
+                <label for="updateAuthor">New name of the author</label>
                 <input class="formElement form-control" id="updateAuthor" type="text" />
             </div>
             <div class="form-group">
@@ -59,14 +60,14 @@ function fetchBlogPosts() {
             createDeleteForm();
             createUpdateForm();
             for (let i = 0; i < responseJSON.length; i++) {
-                $('#blogPosts').append(`<li class="border border-primary"><h2>${responseJSON[i].title}</h2><h5>Posted on: ${responseJSON[i].publishDate}</h5><p>${responseJSON[i].content}</p><p>This post was created by: ${responseJSON[i].author}</p></li>`);
+                $('#blogPosts').append(`<li class="border border-primary blogCard"><h2 class="blogTitles">${responseJSON[i].title}</h2><h5><i>Posted on: ${responseJSON[i].publishDate}</i></h5><p>${responseJSON[i].content}</p><p class="authors">This post was created by: <b>${responseJSON[i].author}</b></p></li>`);
                 $('#selectPostToDelete').append(`<option value="${responseJSON[i].id}">${responseJSON[i].title}</option>`)
                 $('#selectPostToUpdate').append(`<option value="${responseJSON[i].id}">${responseJSON[i].title}</option>`)
             }
         },
         error: function (err) {
-            console.log("There has been an error");
-            $('#deleteForm').html('');
+            console.log(err.responseJSON);
+            cleanPage();
             $('#blogPosts').html('<h3>There has been an error loading the posts</h3>');
         }
     });
@@ -87,7 +88,9 @@ function updatePost(postID) {
             fetchBlogPosts();
         },
         error: function (err) {
-            console.log(err.responseJSON.code);
+            console.log(err.responseJSON);
+            cleanPage();
+            $('#blogPosts').html(`<h3>${err.responseJSON.message}</h3>`);
 
         }
     });
@@ -108,14 +111,12 @@ function post() {
             fetchBlogPosts();
         },
         error: function (err) {
-            console.log(err.responseJSON.code);
+            console.log(err.responseJSON);
             if (err.responseJSON.code == 406) {
                 $('#errorMessage').html(`<b>You are missing one of the fields in the form</b>`);
-                $('#successfulMessage').html(``);
             }
             else {
-                console.log("There has been an error");
-                $('#blogPosts').html('<h3>There has been an error loading the posts</h3>');
+                $('#blogPosts').html(`<h3>${err.responseJSON.message}</h3>`);
             }
         }
     });
@@ -134,7 +135,15 @@ function deletePost(postID) {
 
         },
         error: function (err) {
-            console.log(err);
+            console.log(err.responseJSON);
+            $('#errorMessageUpdate').html('');
+            if (err.responseJSON.code == 404) {
+                $('#errorMessageDelete').append(`<h3>Please select a post</h3>`);
+            }
+            else {
+                ('#errorMessageDelete').append(`<h3>${err.responseJSON.message}</h3>`);
+            }
+
         }
     });
 }
@@ -188,20 +197,19 @@ function watchForms() {
     })
     $('#deleteForm').on('click', 'input', (event) => {
         event.preventDefault();
+        $('#errorMessageDelete').html('');
         deletePost($('#selectPostToDelete').val());
+
     })
     $('#updateForm').on('click', '#updateButton', (event) => {
         event.preventDefault();
         $('#errorMessageUpdate').html('');
-        if ($('#selectPostToUpdate').val() == 0) {
-            $('#errorMessageUpdate').append(`<h3>Please select a post</h3>`)
+        if (verifyEmptyValuesUpdate()) {
+            newPost.publishDate = new Date();
+            updatePost($('#selectPostToUpdate').val());
         }
         else {
-            if (verifyEmptyValuesUpdate())
-                updatePost($('#selectPostToUpdate').val());
-            else {
-                $('#errorMessageUpdate').append(`<h3>You didn't edit any field</h3>`);
-            }
+            $('#errorMessageUpdate').append(`<h3>You didn't edit any field</h3>`);
         }
     })
 }
