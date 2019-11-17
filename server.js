@@ -3,6 +3,11 @@ let morgan = require('morgan');
 let bp = require('body-parser');
 let uuid =  require('uuid');
 
+let mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+let { BlogPosts } = require('./blog-post-model');
+let { DATABASE_URL, PORT } = require('./config');
+
 let jsonParser = bp.json();
 
 let app = express();
@@ -51,7 +56,17 @@ let blogPosts = [
 ];
 
 app.get('/blog-posts', (req, res, next) => {
-    return res.status(200).json(blogPosts);
+    BlogPosts.getAll()
+        .then(posts => {
+            return res.status(200).json(posts);
+        })
+        .catch(err => {
+            res.statusMessage = "Something went wrong with the DB";
+            return res.status(500).json({
+                message: "Something went wrong with the DB",
+                status: 500
+            })
+        })
 })
 
 app.get('/blog-post', (req, res, next) => {
@@ -62,20 +77,24 @@ app.get('/blog-post', (req, res, next) => {
             message: "Author param is missing"
         })
     }
-    let authorPosts = []
-    for (let i = 0; i < blogPosts.length; i++) {
-        if (req.query.author ==  blogPosts[i].author) {
-            authorPosts.push(blogPosts[i]);
-        }
-    }
-    if (authorPosts.length < 1) {
-        res.statusMessage = "Author doesn't exist";
-        return res.status(404).json({
-            code: 404,
-            message: "Author doesn't exist"
-        });
-    }
-    return res.status(200).json(authorPosts);
+    BlogPosts.get(req.query.author)
+        .then(posts => {
+            if (posts.length < 1) {
+                res.statusMessage = "Author doesn't exist";
+                return res.status(404).json({
+                    code: 404,
+                    message: "Author doesn't exist"
+                });
+            }
+            return res.status(200).json(posts);
+        })
+        .catch(err => {
+            res.statusMessage = "Something went wrong with the DB";
+            return res.status(500).json({
+                message: "Something went wrong with the DB",
+                status: 500
+            })
+        })
 });
 
 app.post('/blog-posts', jsonParser, (req, res, next) => {
@@ -93,27 +112,44 @@ app.post('/blog-posts', jsonParser, (req, res, next) => {
         author: req.body.author,
         publishDate: new Date(req.body.publishDate)
     }
-    blogPosts.push(newPost);
-    return res.status(201).json(newPost);
+    BlogPosts.post(newPost)
+        .then(post => {
+            return res.status(201).json(post);
+        })
+        .catch(err => {
+            res.statusMessage = "Something went wrong with the DB";
+            return res.status(500).json({
+                message: "Something went wrong with the DB",
+                status: 500
+            })
+        })
 
 });
 
 app.delete('/blog-posts/:id', (req, res, next) => {
-    for (let i = 0; i < blogPosts.length; i++) {
-        if (req.params.id == blogPosts[i].id) {
-            blogPosts.splice(i, 1);
+    BlogPosts.delete(req.params.id)
+        .then(post => {
+            if (post.deletedCount == 0) {
+                res.statusMessage = "ID was not found";
+                return res.status(404).json({
+                    code: 404,
+                    message: "ID was not found"
+                })
+            }
             res.statusMessage = "Successfully deleted the post"
             return res.status(200).json({
                 code: 200,
                 message: "Succesfully deleted the post"
             })
-        }
-    }
-    res.statusMessage = "ID was not found";
-    return res.status(404).json({
-        code: 404,
-        message: "ID was not found"
-    })
+
+        })
+        .catch(err => {
+            res.statusMessage = "Something went wrong with the DB";
+            return res.status(500).json({
+                message: "Something went wrong with the DB",
+                status: 500
+            })
+        })
 });
 
 app.put('/blog-posts/:id', jsonParser, (req, res, next) => {
@@ -131,31 +167,90 @@ app.put('/blog-posts/:id', jsonParser, (req, res, next) => {
             message: "The IDs do not match"
         });
     }
-    for (let i = 0; i < blogPosts.length; i++) {
-        if (blogPosts[i].id == req.body.id) {
-            if (req.body.title != undefined) {
-                blogPosts[i].title = req.body.title;
+    BlogPosts.find(req.body.id)
+        .then(post => {
+            if (post != null) {
+                if (req.body.title != undefined)
+                    post.title = req.body.title;
+                if (req.body.content != undefined)
+                    post.content = req.body.content;
+                if (req.body.author != undefined)
+                    post.author = req.body.author;
+                if (req.body.publishDate != undefined)
+                    post.publishDate = req.body.publishDate;
+
+                BlogPosts.put(req.body.id, post.title, post.content, post.author, post.publishDate)
+                    .then(updatedPost => {
+                        res.statusMessage = "Successfully updated the post";
+                        return res.status(202).json(updatedPost);
+                    })  
+                    .catch(err => {
+                        res.statusMessage = "Something went wrong with the DB";
+                        return res.status(500).json({
+                            message: "Something went wrong with the DB",
+                            status: 500
+                        })
+                    })      
             }
-            if (req.body.content != undefined) {
-                blogPosts[i].content = req.body.content;
+            else {
+                res.statusMessage = "ID was not found";
+                return res.status(404).json({
+                    code: 404,
+                    message: "ID was not found"
+                })
             }
-            if (req.body.author != undefined) {
-                blogPosts[i].author = req.body.author;
-            }
-            if (req.body.publishDate != undefined) {
-                blogPosts[i].publishDate = new Date(req.body.publishDate);
-            }
-            res.statusMessage = "Successfully updated the post";
-            return res.status(202).json(blogPosts[i]);
-        }
-    }
-    res.statusMessage = "ID was not found";
-    return res.status(404).json({
-        code: 404,
-        message: "ID was not found"
-    })
+        })
+        .catch(err => {
+            res.statusMessage = "Something went wrong with the DB";
+            return res.status(500).json({
+                message: "Something went wrong with the DB",
+                status: 500
+            })
+        })
 });
 
-app.listen('8080', () => {
-    console.log("App running on localhost:8080");
-});
+let server;
+
+function runServer(port, databaseUrl) {
+    return new Promise((resolve, reject) => {
+        mongoose.connect(databaseUrl, response => {
+            if (response) {
+                return reject(response);
+            }
+            else {
+                server = app.listen(port, () => {
+                    console.log("App is running on port " + port);
+                    resolve();
+                })
+                    .on('error', err => {
+                        mongoose.disconnect();
+                        return reject(err);
+                    })
+            }
+        });
+    });
+}
+
+function closeServer() {
+    return mongoose.disconnect()
+        .then(() => {
+            return new Promise((resolve, reject) => {
+                console.log('Closing the server');
+                server.close(err => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    else {
+                        resolve();
+                    }
+                });
+            });
+        });
+}
+
+runServer(PORT, DATABASE_URL)
+    .catch(err => {
+        console.log(err);
+    });
+
+module.exports = { app, runServer, closeServer };

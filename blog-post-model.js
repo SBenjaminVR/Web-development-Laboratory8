@@ -2,54 +2,72 @@ let mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-let petSchema = mongoose.Schema({
-    name: { type: String },
-    typeOfPet: { type: String },
-    id: {
-        type: Number,
-        required: true
-    }
-});
+let blogPostSchema = mongoose.Schema({
+    id: {type: String},
+    title: {type: String}, 
+    content: {type: String},
+    author: {type: String},
+    publishDate: {type: Date}
+})
 
-let Pet = mongoose.model('Pet', petSchema);
+let Blog = mongoose.model('benjamin-blog-post', blogPostSchema);
 
-let PetList = {
-    post: function (newPet) {
-        return Pet.create(newPet)
-            .then(pet => {
-                return pet;
+let BlogPosts = {
+    post: function(newPost) {
+        return Blog.create(newPost)
+            .then(post => {
+                return post;
             })
             .catch(err => {
                 throw Error(err);
             });
     },
-    getAll: function () {
-        return Pet.find()
-            .then(pet => {
-                return pet;
+    getAll: function() {
+        return Blog.find()
+            .then(posts => {
+                return posts
             })
             .catch(err => {
                 throw Error(err);
             })
     },
-    get: function (idToFind) {
-        return Pet.findOne({ id: idToFind })
-            .then(pet => {
-                return pet;
+    get: function(authorNanme) {
+        return Blog.find({ author: authorNanme })
+            .then(posts => {
+                return posts;
             })
             .catch(err => {
                 throw Error(err);
             })
     },
-    put: function (idToFind, updatedPet) {
-        return Pet.findOneAndUpdate({ id: idToFind }, { $set: { updatedPet } }, { new: true })
-            .then(pet => {
-                return pet;
+    delete: function(idToDelete) {
+        return Blog.deleteOne({ id: idToDelete })
+            .then(post => {
+                return post;
+            })
+            .catch(err => {
+                throw Error(err);
+            })
+    },
+    put: function (idToUpdate, newTitle, newContent, newAuthor, newDate) {
+        return Blog.findOneAndUpdate({ id: idToUpdate }, { $set: { title: newTitle, content: newContent, author: newAuthor, publishDate: newDate } }, { new: true })
+            .then(post => {
+                return post;
+            })
+            .catch(err => {
+                throw Error(err);
+            })
+    },
+    find: function(idToFind) {
+        return Blog.findOne({ id: idToFind })
+            .then(post => {
+                return post;
             })
             .catch(err => {
                 throw Error(err);
             })
     }
+
 }
 
-module.exports = { PetList };
+module.exports = { BlogPosts };
