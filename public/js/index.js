@@ -34,10 +34,7 @@ function createDeleteForm() {
 function createUpdateForm() {
     $('#updateForm').append(`<legend>Update a post (You can leave up to 2 fields empty)</legend>`);
     $('#updateForm').append(`<select class="custom-select" id="selectPostToUpdate"></select>`);
-    $('#updateForm').append(`<div class="form-group">
-                <label for="updateAuthor">New name of the author</label>
-                <input class="formElement form-control" id="updateAuthor" type="text" />
-            </div>
+    $('#updateForm').append(`
             <div class="form-group">
                 <label for="updateTitle">New title</label>
             <input class="formElement form-control" id="updateTitle" type="text" />
@@ -45,6 +42,10 @@ function createUpdateForm() {
             <div class="form-group">
                 <label for="updateContent">New content</label>
             <textarea class="formElement form-control" id="updateContent" rows="3" type="text"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="updateAuthor">New name of the author</label>
+                <input class="formElement form-control" id="updateAuthor" type="text" />
             </div>`);
     $('#updateForm').append(`<input class="btn btn-primary" id="updateButton" type="submit" value="Submit" />`);
     $('#selectPostToUpdate').append(`<option value='0'selected>Open this select menu</option>`);
