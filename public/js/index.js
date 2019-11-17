@@ -52,7 +52,7 @@ function createUpdateForm() {
 
 function fetchBlogPosts() {
     $.ajax({
-        url: "http://localhost:8080/blog-posts",
+        url: "/blog-posts",
         method: "GET",
         dataType: "json",
         success: function (responseJSON) {
@@ -74,7 +74,7 @@ function fetchBlogPosts() {
 }
 
 function updatePost(postID) {
-    let updateUrl = "http://localhost:8080/blog-posts/" + postID;
+    let updateUrl = "/blog-posts/" + postID;
     newPost.id = postID;
     $.ajax({
         url: updateUrl,
@@ -98,7 +98,7 @@ function updatePost(postID) {
 
 function post() {
     $.ajax({
-        url: "http://localhost:8080/blog-posts",
+        url: "/blog-posts",
         method: "POST",
         data: JSON.stringify(newPost),
         contentType: "application/json",
@@ -123,7 +123,7 @@ function post() {
 }
 
 function deletePost(postID) {
-    let deleteUrl = 'http://localhost:8080/blog-posts/' + postID;
+    let deleteUrl = '/blog-posts/' + postID;
     $.ajax({
         url: deleteUrl,
         method: "DELETE",
