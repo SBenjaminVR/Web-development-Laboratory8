@@ -32,7 +32,7 @@ function createDeleteForm() {
 }
 
 function createUpdateForm() {
-    $('#updateForm').append(`<legend>Update a post (You can leave up to 2 fields empty)</legend>`);
+    $('#updateForm').append(`<legend>Update a post (You can leave up to 2 empty fields)</legend>`);
     $('#updateForm').append(`<select class="custom-select" id="selectPostToUpdate"></select>`);
     $('#updateForm').append(`
             <div class="form-group">
